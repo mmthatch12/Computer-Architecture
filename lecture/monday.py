@@ -52,7 +52,7 @@ while running:
 
     elif command == SAVE:
         num = memory[pc + 1]
-        reg  = memory[pc +2]
+        reg  = memory[pc + 2]
         registers[reg] = num
         pc += 3
 
