@@ -6,29 +6,14 @@ PRINT_NUM      = 3 #0000 0011
 SAVE           = 4 #0000 0100
 PRINT_REGISTER = 5 #0000 0101
 ADD            = 6 #0000 0110
+PUSH           = 7
+POP            = 8
 
-memory = [
-    PRINT_BEEJ,
-    SAVE,
-    65,
-    2,
-    SAVE,
-    20,
-    3,
-    ADD,
-    2,
-    3,
-    PRINT_REGISTER,
-    2,
-    PRINT_BEEJ,
-    PRINT_NUM,
-    46,
-    PRINT_BEEJ,
-    PRINT_BEEJ,
-    HALT
-]
+memory = [0] * 256
 
 registers = [0] * 8
+
+SP = 7
 
 # program counter
 pc = 0
@@ -69,6 +54,22 @@ while running:
     elif command == PRINT_REGISTER:
         reg = memory[pc + 1]
         print(registers[reg])
+        pc += 2
+
+    elif command == PUSH:
+        reg = memory[pc+1]
+        val = registers[reg]
+
+        register[SP] -=1
+        memory[registers[SP]] = val
+        pc += 2
+
+    elif command == POP:
+        reg = memory[pc+1]
+        val = memory[registers[SP]]
+        registers[reg] = val
+        registers[SP] += 1
+
         pc += 2
 
     else:

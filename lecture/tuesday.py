@@ -7,32 +7,43 @@ SAVE           = 4 #0000 0100
 PRINT_REGISTER = 5 #0000 0101
 ADD            = 6 #0000 0110
 
-memory = [
-    PRINT_BEEJ,
-    SAVE,
-    65,
-    2,
-    SAVE,
-    20,
-    3,
-    ADD,
-    2,
-    3,
-    PRINT_REGISTER,
-    2,
-    PRINT_BEEJ,
-    PRINT_NUM,
-    46,
-    PRINT_BEEJ,
-    PRINT_BEEJ,
-    HALT
-]
+memory = [0]*256
 
 registers = [0] * 8
 
 # program counter
 pc = 0
 running = True
+
+
+def load_memory(filename):
+
+    try:
+        address = 0
+        with open(filename) as f:
+            for line in f:
+                comment_split = line.split("#")
+                num = comment_split[0].strip()
+
+                if num == "":
+                    continue
+
+                val = int(num) #base 10 but ls-8 is base 2
+
+                memory[address] =val
+                address += 1
+
+    except FileNotFoundError:
+        print(f"{sys.argv[0]}: {filename} not found")
+        sys.exit(2)
+
+if len(sys.argv) != 2:
+    print("Usage: file.py filename", file=sys.stderr)
+    sys.exit(1)
+
+load_memory(sys.argv[1])
+
+
 
 while running:
     # execute instruction in memory
