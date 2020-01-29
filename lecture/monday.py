@@ -1,11 +1,11 @@
 import sys
 
-PRINT_BEEJ = 1
-HALT = 2
-PRINT_NUM = 3
-SAVE = 4
-PRINT_REGISTER = 5
-ADD = 6
+PRINT_BEEJ     = 1 #0000 0001
+HALT           = 2 #0000 0010
+PRINT_NUM      = 3 #0000 0011
+SAVE           = 4 #0000 0100
+PRINT_REGISTER = 5 #0000 0101
+ADD            = 6 #0000 0110
 
 memory = [
     PRINT_BEEJ,
@@ -21,6 +21,8 @@ memory = [
     PRINT_REGISTER,
     2,
     PRINT_BEEJ,
+    PRINT_NUM,
+    46,
     PRINT_BEEJ,
     PRINT_BEEJ,
     HALT
