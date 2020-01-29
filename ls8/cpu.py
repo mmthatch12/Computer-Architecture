@@ -7,7 +7,7 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
-        self.registers = [0] * 8
+        self.reg = [0] * 8
         self.pc = 0 # program counter, address of the currently executing instruction
         self.ram = [0] * 256
     
@@ -73,5 +73,35 @@ class CPU:
         ir = self.ram_read(self.pc)
         operand_a = self.ram_read(self.pc+1)
         operand_b = self.ram_read(self.pc+2)
+
+        running = True
+
+        HLT = 0b00000001
+        LDI = 0b10000010
+        PRN = 0b01000111
+
+
+        while running:
+            
+            opcode = self.ram[ir] #command
+
+            if opcode == HLT:
+                running = False
+                self.pc += 1
+
+            elif opcode == LDI:
+                self.reg[operand_b] = operand_a
+                self.pc +=3
+
+            elif opcode == PRN:
+                print(self.reg[operand_a])
+                self.pc += 2
+            
+            
+
+            
+
+
+
         
 
