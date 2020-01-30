@@ -36,9 +36,10 @@ class CPU:
                         continue
 
                     val = int(num, 2)
-
-                    self.ram[address] = val
-                    address += 1
+                    program.append(val)
+        
+        except FileNotFoundError:
+            sys.exit(2)
 
         for instruction in program:
             self.ram[address] = instruction
