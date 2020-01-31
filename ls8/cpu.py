@@ -9,7 +9,7 @@ class CPU:
         """Construct a new CPU."""
         self.reg = [0] * 8
         self.pc  = 0 # program counter, address of the currently executing instruction
-        self.ram = [0] * 16
+        self.ram = [0] * 256
         self.fl = 4
     
     def ram_read(self, mar):
@@ -97,7 +97,8 @@ class CPU:
         LDI = 0b10000010
         PRN = 0b01000111
         MUL = 0b10100010
-        CMP = 0B10100111
+        CMP = 0b10100111
+        JMP = 0b01010100
 
 
         while running:
@@ -123,9 +124,17 @@ class CPU:
                 self.alu("MUL", operand_a, operand_b)
                 self.pc += 3
             
-            elif operand_b == CMP:
+            elif opcode == CMP:
                 self.alu("CMP", operand_a, operand_b)
                 self.pc += 3
+            
+            elif opcode == JMP:
+                index = self.pc
+                nextind = self.ram.index(self.reg[operand_a])
+                if nextind > index:
+                    self.pc += nextind - index
+                elif nextind < index:
+                    self.pc -= index - nextind 
 
             
             
