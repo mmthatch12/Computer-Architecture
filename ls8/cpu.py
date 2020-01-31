@@ -9,8 +9,10 @@ class CPU:
         """Construct a new CPU."""
         self.reg = [0] * 8
         self.pc  = 0 # program counter, address of the currently executing instruction
-        self.ram = [0] * 256
-        self.fl = 4
+        self.ram = [0] * 100
+        self.equal = 4
+        self.greater = 5
+        self.lesser = 6
     
     def ram_read(self, mar):
         return self.ram[mar]
@@ -59,11 +61,11 @@ class CPU:
 
         elif op == "CMP":
             if self.reg[reg_a] == self.reg[reg_b]:
-                self.reg[self.fl] = 0b00000001
+                self.reg[self.equal] = 0b00000001
             elif self.reg[reg_a] < self.reg[reg_b]:
-                self.reg[self.fl] = 0b00000100
+                self.reg[self.lesser] = 0b00000100
             elif self.reg[reg_a] > self.reg[reg_b]:
-                self.reg[self.fl] = 0b00000010
+                self.reg[self.greater] = 0b00000010
 
         else:
             raise Exception("Unsupported ALU operation")
@@ -107,8 +109,8 @@ class CPU:
             ir = self.ram_read(self.pc)
             operand_a = self.ram_read(self.pc+1)
             operand_b = self.ram_read(self.pc+2)
-            print("self.ram", self.ram)
-            print("self.reg", self.reg)
+            # print("self.ram", self.ram)
+            # print("self.reg", self.reg)
 
             opcode = ir #command
             if opcode == HLT:
@@ -139,24 +141,15 @@ class CPU:
                     self.pc -= index - nextind 
             
             elif opcode == JEQ:
-                index = self.pc
-                nextind = self.ram.index(self.reg[operand_a])
-                if self.reg[self.fl] == 0b00000001:
-                    if nextind > index:
-                        self.pc += nextind - index
-                    elif nextind < index:
-                        self.pc -= index - nextind 
+                if self.reg[self.equal] == 0b00000001:
+                    self.pc = self.reg[operand_a]
                 else:
                     self.pc += 2
             
             elif opcode == JNE:
-                index = self.pc
-                nextind = self.ram.index(self.reg[operand_a])
-                if self.reg[self.fl] == 0b00000000:
-                    if nextind > index:
-                        self.pc += nextind - index
-                    elif nextind < index:
-                        self.pc -= index - nextind 
+                if self.reg[self.equal] == 0b00000000:
+                    self.pc = self.reg[operand_a]
+
                 else:
                     self.pc += 2
             
