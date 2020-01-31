@@ -100,6 +100,7 @@ class CPU:
         CMP = 0b10100111
         JMP = 0b01010100
         JEQ = 0b01010101
+        JNE = 0b01010110
 
 
         while running:
@@ -141,6 +142,17 @@ class CPU:
                 index = self.pc
                 nextind = self.ram.index(self.reg[operand_a])
                 if self.reg[self.fl] == 0b00000001:
+                    if nextind > index:
+                        self.pc += nextind - index
+                    elif nextind < index:
+                        self.pc -= index - nextind 
+                else:
+                    self.pc += 2
+            
+            elif opcode == JNE:
+                index = self.pc
+                nextind = self.ram.index(self.reg[operand_a])
+                if self.reg[self.fl] == 0b00000000:
                     if nextind > index:
                         self.pc += nextind - index
                     elif nextind < index:
