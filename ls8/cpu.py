@@ -10,6 +10,7 @@ class CPU:
         self.reg = [0] * 8
         self.pc  = 0 # program counter, address of the currently executing instruction
         self.ram = [0] * 16
+        self.fl = 4
     
     def ram_read(self, mar):
         return self.ram[mar]
@@ -56,6 +57,14 @@ class CPU:
         elif op == "MUL":
             self.reg[reg_a] *= self.reg[reg_b]
 
+        elif op == "CMP":
+            if self.reg[reg_a] == self.reg[reg_b]:
+                self.reg[self.fl] = 0b00000001
+            elif self.reg[reg_a] < self.reg[reg_b]:
+                self.reg[self.fl] = 0b00000100
+            elif self.reg[reg_a] > self.reg[reg_b]:
+                self.reg[self.fl] = 0b00000010
+
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -88,13 +97,16 @@ class CPU:
         LDI = 0b10000010
         PRN = 0b01000111
         MUL = 0b10100010
+        CMP = 0B10100111
 
 
         while running:
             ir = self.ram_read(self.pc)
             operand_a = self.ram_read(self.pc+1)
             operand_b = self.ram_read(self.pc+2)
-            
+            print("self.ram", self.ram)
+            print("self.reg", self.reg)
+
             opcode = ir #command
             if opcode == HLT:
                 running = False
@@ -109,6 +121,10 @@ class CPU:
             
             elif opcode == MUL:
                 self.alu("MUL", operand_a, operand_b)
+                self.pc += 3
+            
+            elif operand_b == CMP:
+                self.alu("CMP", operand_a, operand_b)
                 self.pc += 3
 
             
